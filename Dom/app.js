@@ -1,17 +1,5 @@
+let secondItem=document.querySelector('.list-group-item:nth-child(2)');
+secondItem.style.background='green';
 
-
-let second=document.querySelectorAll('li');
-for(let i=0;i<second.length;i++){
-    if(i==1){
-        second[i].style.color='green';
-    }
-}
-let odd=document.querySelectorAll('li:nth-child(odd');
-for(let i=0;i<odd.length;i++){
-    odd[i].style.background='green';
-}
-
-// querySelector selects only first query with same className
-//querySelectorAll Selects all the querys with same classNames
-
-
+let thirdItem=document.querySelector('.list-group-item:nth-child(3)');
+thirdItem.style.display='none';
