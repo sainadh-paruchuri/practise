@@ -1,62 +1,53 @@
+var form=document.getElementById('addForm');
+var itemList=document.getElementById('items');
 
-let itemList=document.querySelector('#items');
-//parentNode
-itemList.parentNode.style.background='#ccc';
-console.log(itemList.parentNode)
+//form submit event
+form.addEventListener('submit',addItem);
+//Delete event
+itemList.addEventListener('click',removeItem);
 
-// parentElemnt
+//add Item
+function addItem(e){
+    e.preventDefault();
 
-itemList.parentElement.style.background='red';
+    //Get input value
+    var newItem=document.getElementById('input').value;
 
-//childNode
-console.log(itemList.childNode);
+    //create new li element
+    var li=document.createElement('li');
+    //Add class
+    li.className='list-group-item';
+    //Add text node with input value
+    li.appendChild(document.createTextNode(newItem));
 
-console.log(itemList.children);
-itemList.children[1].style.color='pink';
+    //create del button element
+    var deleteButton=document.createElement('button');
+    //Add classes to del btns
+    deleteButton.className='btn btn-danger btn-sm float-right delete'
 
-//firstChild
-console.log(itemList.firstChild);
-console.log(itemList.firstElementChild);
+    //Append text
+    deleteButton.appendChild(document.createTextNode('X'));
 
-//lastchild
-console.log(itemList.lastChild);
-console.log(itemList.lastElementChild);
+    //Edit button
+    var editButton=document.createElement('button');
+    //Add class
+    editButton.className='btn btn-success btn-sm ml-1 float-right edit';
+    //Add text
+    editButton.appendChild(document.createTextNode('EDIT'));
+    //Append button li
+    
+    li.appendChild(editButton);
+    li.appendChild(deleteButton);
 
-//nextsibling
+    itemList.appendChild(li);
 
-console.log(itemList.nextElementSibling);
-console.log(itemList.nextSibling)
+}
 
-//previous sibling
-
-console.log(itemList.previousSibling);
-console.log(itemList.previousElementSibling);
-
-let newDiv=document.createElement('div');
-
-//add class
- newDiv.className='hello';
-
- //add id
- newDiv.id='hello1';
-
- //add attr
- newDiv.setAttribute('title','hello div')
-
- //create text
- let newText=document.createTextNode('Hello');
- newDiv.appendChild(newText);
-
- let container=document.querySelector('header .container');
- var h1=document.querySelector('header h1');
- container.insertBefore(newDiv,h1);
-
- let container1=document.querySelector('#main');
-
- container1.insertBefore(newDiv,itemList.children[0]);
-
- console.log(newDiv)
-
-
-
-
+function removeItem(e){
+    if(e.target.classList.contains('delete')){
+        if(confirm("Are you Sure")){
+            var li=e.target.parentElement;
+            itemList.removeChild(li);
+        }
+    }
+}
