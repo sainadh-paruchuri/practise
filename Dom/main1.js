@@ -76,3 +76,12 @@ function onSubmit(e){
     }
 })
  
+function removeItem(e){
+   if(e.target.classList.contains('delete')){
+       if(confirm("Are you Sure")){
+           var li=e.target.parentElement;
+           localStorage.removeItem(li);
+           itemList.removeChild(li);
+       }
+   }
+}
