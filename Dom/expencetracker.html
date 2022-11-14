@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expence Tracker</title>
+</head>
+<body>
+    <div>
+        <label for="amount">Choose expenceamount:</label>
+        <input type="number" id="amount" required>
+        <label for="description">Choose Description:</label>
+        <input type="text" id="description" required>
+        <label for="category">Choose a Category:</label>
+        <select name="" id="choose" required>
+            <option value=""></option>
+            <option value="petrol">petrol</option>
+            <option value="desiel">desiel</option>
+            <option value="movie">movie</option>
+            <option value="food">food</option>
+            <option value="holiday">Holiday vacation</option>
+        </select>
+        <button type="submit" id="submit">Add Expence</button>
+    </div>
+    <div id="addExpence"></div>
+</body>
+<script>
+    let amount=document.getElementById('amount');
+    let description=document.getElementById('description');
+    let choose=document.getElementById('choose')
+    let addExpence=document.getElementById('addExpence')
+    let btn=document.getElementById('submit');
+
+    btn.addEventListener('click',AddExpence);
+    addExpence.addEventListener('click',DeleteExpence);
+    addExpence.addEventListener('click',EditExpence);
+
+    function AddExpence(event){
+        event.preventDefault();
+        if(amount.value=='' || description.value=='' || choose.value==''){
+            alert('please fill all values');
+            amount.value=='';
+            description.value=='';
+            choose.value=='';
+        }else{
+        let obj={
+            amount:amount.value,
+            description:description.value,
+            choose:choose.value
+        }
+        localStorage.setItem(obj.choose,JSON.stringify(obj));
+        showListOfExpenceOnWindow(obj);
+        amount.value='';
+        description.value='';
+        choose.value='';
+        }
+
+    }
+    function showListOfExpenceOnWindow(obj){
+        let li=document.createElement('li');
+        li.id=`${obj.choose}`;
+
+        //delete button
+        let deleteButton=document.createElement('button');
+        deleteButton.className='delete';
+        deleteButton.appendChild(document.createTextNode('Delete Expence'));
+
+        //edit button
+        let editButton=document.createElement('button');
+        editButton.className='edit';
+        editButton.appendChild(document.createTextNode('Edit Expence'));
+
+        li.appendChild(document.createTextNode(`${obj.amount}-${obj.description}-${obj.choose}`));
+        li.appendChild(deleteButton);
+        li.appendChild(editButton);
+        addExpence.appendChild(li);
+        }
+        window.addEventListener('DOMContentLoaded',(event)=>{
+            Object.keys(localStorage).forEach(key=>{
+                const expence=JSON.parse(localStorage.getItem(key));
+                showListOfExpenceOnWindow(expence);
+            })
+        })
+        function DeleteExpence(event){
+            if(event.target.classList.contains('delete')){
+                let id=event.target.parentElement.id;
+                localStorage.removeItem(id);
+                addExpence.removeChild(event.target.parentElement);
+            }
+        }
+
+        function EditExpence(event){
+            if(event.target.classList.contains('edit')){
+                let id=event.target.parentElement.id;
+                let expenceValue=localStorage.getItem(id);
+                expenceValue=JSON.parse(expenceValue);
+                amount.value=expenceValue.amount;
+                description.value=expenceValue.description;
+                choose.value=expenceValue.choose;
+
+                localStorage.removeItem(id);
+                addExpence.removeChild(event.target.parentElement);
+
+            }
+        }
+
+
+
+
+</script>
+</html>
