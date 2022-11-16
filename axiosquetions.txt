@@ -1,0 +1,7 @@
+1)headers are used to pass additional information between the clients and the server through the request.
+we use some headers like Request Authentication etc
+
+2)axios is tool used to communicate between frontend and serves. in axios we can get the request or post the the request.
+
+3)we have coose correct url, we cannot stringfy the object it can done automatically
+
