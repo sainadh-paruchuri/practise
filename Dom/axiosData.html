@@ -69,9 +69,20 @@
             users.appendChild(li);
         }
         window.addEventListener('DOMContentLoaded',(event)=>{
-            Object.keys(localStorage).forEach(key=>{
-                const user=JSON.parse(localStorage.getItem(key));
-                showListOfUser(user);
+            // Object.keys(localStorage).forEach(key=>{
+            //     const user=JSON.parse(localStorage.getItem(key));
+            //     showListOfUser(user);
+            // })
+            axios.get("https://crudcrud.com/api/54dbe7abee324477a39869f1c94eb03e/appointmentData")
+            .then((response)=>{
+                response.data.forEach(element => {
+                    showListOfUser(element);
+                });
+                
+                console.log(response);
+            })
+            .catch((err)=>{
+                console.log(err);
             })
          })
         //  function deleteUser(email){
