@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <label for="name">Name: </label>
+        <input type="text" id="username">
+        <label for="email">Email: </label>
+        <input type="email" id="useremail">
+        <button type="submit" id="submitbutton">Submit</button>
+    </form>
+    <div class="users"></div>
+    <script>
+        let username=document.getElementById('username');
+        let useremail=document.getElementById('useremail');
+        let subbutton=document.getElementById('submitbutton');
+        let users=document.querySelector('.users');
+
+        subbutton.addEventListener('click',addUser);
+        users.addEventListener('click',deleteUser);
+        users.addEventListener('click',editUser)
+
+        function addUser(e){
+            e.preventDefault();
+            let obj={
+                name:username.value,
+                email:useremail.value
+            }
+           
+
+            localStorage.setItem(obj.email,JSON.stringify(obj));
+            showListOfUser(obj);
+        } 
+        function showListOfUser(user){
+            let li=document.createElement('li');
+            
+            //Delete Button
+             let dButton=document.createElement('button');
+            dButton.type='button';
+            li.id=`${user.email}`
+            dButton.className='delete';
+            //dButton.setAttribute(onclick,deleteUser(`${user.email}`));
+            dButton.appendChild(document.createTextNode('DELETE'));
+           // dButton.addEventListener('click',deleteUser(`${user.email}`));
+            
+            //Edit Button
+            let eButton=document.createElement('button');
+            eButton.className='edit';
+            
+            eButton.appendChild(document.createTextNode('Edit'));
+
+            li.appendChild(document.createTextNode(`${user.name}-${user.email}`))
+            li.appendChild(dButton);
+            li.appendChild(eButton);
+
+            users.appendChild(li);
+        }
+        window.addEventListener('DOMContentLoaded',(event)=>{
+            Object.keys(localStorage).forEach(key=>{
+                const user=JSON.parse(localStorage.getItem(key));
+                showListOfUser(user);
+            })
+         })
+        //  function deleteUser(email){
+
+        //     localStorage.removeItem(email)
+        //  }
+        function deleteUser(e){
+            if(e.target.classList.contains('delete')){
+                let id=document.querySelector('.delete').parentElement.id;
+                localStorage.removeItem(id);
+                let li=e.target.parentElement;
+                users.removeChild(li);
+
+            }
+        }
+        function editUser(e){
+            if(e.target.classList.contains('edit')){
+            let id=document.querySelector('.edit').parentElement.id;
+            let uservalue=localStorage.getItem(id);
+            uservalue=JSON.parse(uservalue);
+            username.value=uservalue.name;
+            useremail.value=uservalue.email;
+
+
+            localStorage.removeItem(id);
+            let li=e.target.parentElement;
+            users.removeChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
