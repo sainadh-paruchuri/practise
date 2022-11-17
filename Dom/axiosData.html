@@ -32,7 +32,7 @@
                 name:username.value,
                 email:useremail.value
             }
-            axios.post("https://crudcrud.com/api/54dbe7abee324477a39869f1c94eb03e/appointmentData",obj)
+            axios.post("https://crudcrud.com/api/211480b4639b4a7e9a9b202163316fb6/appointmentData",obj)
             .then((response)=>{
                 showListOfUser(response.data);
                 console.log(response.data)
@@ -40,6 +40,8 @@
             .catch((err)=>{
                 console.log(err);
             })
+            username.value='';
+            useremail.value='';
 
             // localStorage.setItem(obj.email,JSON.stringify(obj));
             // showListOfUser(obj);
@@ -50,7 +52,7 @@
             //Delete Button
              let dButton=document.createElement('button');
             dButton.type='button';
-            li.id=`${user.email}`
+            li.id=`${user._id}`
             dButton.className='delete';
             //dButton.setAttribute(onclick,deleteUser(`${user.email}`));
             dButton.appendChild(document.createTextNode('DELETE'));
@@ -69,11 +71,7 @@
             users.appendChild(li);
         }
         window.addEventListener('DOMContentLoaded',(event)=>{
-            // Object.keys(localStorage).forEach(key=>{
-            //     const user=JSON.parse(localStorage.getItem(key));
-            //     showListOfUser(user);
-            // })
-            axios.get("https://crudcrud.com/api/54dbe7abee324477a39869f1c94eb03e/appointmentData")
+            axios.get("https://crudcrud.com/api/211480b4639b4a7e9a9b202163316fb6/appointmentData")
             .then((response)=>{
                 response.data.forEach(element => {
                     showListOfUser(element);
@@ -91,8 +89,17 @@
         //  }
         function deleteUser(e){
             if(e.target.classList.contains('delete')){
-                let id=document.querySelector('.delete').parentElement.id;
-                localStorage.removeItem(id);
+                //let id=document.querySelector('.delete').parentElement.id;
+                let id=e.target.parentElement.id;
+                console.log(id);
+                axios.delete(`https://crudcrud.com/api/211480b4639b4a7e9a9b202163316fb6/appointmentData/${id}`)
+                .then((response)=>{
+                    window.location.reload;
+                    console.log(response);
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
                 let li=e.target.parentElement;
                 users.removeChild(li);
 
