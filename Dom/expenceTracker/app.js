@@ -13,13 +13,14 @@ let ul=document.getElementById('unlist');
 
 subButton.addEventListener('click',addAmount);
 expenseButton.addEventListener('click',addExpence);
+ul.addEventListener('click',deleteUser);
+ul.addEventListener('click',editUser);
 
 function addAmount(e){
     e.preventDefault();
     alert('Are you sure!')
-    amount.innerHTML=input.value;
-    remaining.innerHTML=Number(0);
-    spent.innerHTML=Number(0);
+    amount.innerHTML=Number(input.value);
+    remaining.innerHTML=Number(input.value);
 
     input.value='';
 }
@@ -36,38 +37,81 @@ function addExpence(event){
 
     }
     else{
+        remaining.innerHTML=remaining.innerHTML-Number(expenseAmount.value);
+        spent.innerHTML=Number(spent.innerHTML)+Number(expenseAmount.value);
     let userExpence={
         amount:expenseAmount.value,
         description:expenseDescription.value,
         choose:expenseChoose.value
     }
-    
-    ShowListExpense(userExpence);
+    axios.post("https://crudcrud.com/api/bb9ccc62956143d6a7f50a755324d5eb/expenseData",userExpence)
+            .then((response)=>{
+                ShowListExpense(response.data)
+                console.log(response.data)
+            })
+            .catch((err)=>{
+                console.log(err);
+    })
+    expenseAmount.value='';
+    expenseDescription.value='';
+    expenseChoose.value='';
 
 }
-
 }
 
-function ShowListExpense(userExpence){
-    console.log(userExpence);
-    let li=document.createElement('li');
-    let deleteButton=document.createElement('button');
-    let editButton=document.createElement('button');
-    console.log(userExpence.amount);
+function ShowListExpense(userExpence){    
+    const children=`<li id="${userExpence._id}"> <h4 id="eamount">${userExpence.amount}</h4><h4 id="ediscription">${userExpence.description}</h4><h4 id="echoose">${userExpence.choose}</h4> <button class="delete">DELETE</button><button class="edit">EDIT</button></li>`
+    ul.innerHTML+=children;  
+}
 
-    li.id='list'
-    deleteButton.className='delete'
-    editButton.className='edit'
+window.addEventListener('DOMContentLoaded',(event)=>{
 
-    li.appendChild(document.createTextNode(`${userExpence.amount}-${userExpence.description}-${userExpence.choose}`));
-    deleteButton.appendChild(document.createTextNode('DELETE'));
-    editButton.appendChild(document.createTextNode('EDIT'));
+    axios.get("https://crudcrud.com/api/bb9ccc62956143d6a7f50a755324d5eb/expenseData")
+    .then((response)=>{
+        response.data.forEach(element => {
+            ShowListExpense(element);
+        });
+        
+        console.log(response);
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+ })
 
-    li.appendChild(deleteButton);
-    li.appendChild(editButton);
-    ul.appendChild(li);
+ function deleteUser(e){
+    if(e.target.classList.contains('delete')){
+        let id=e.target.parentElement.id;
+        console.log(id);
+        axios.delete(`https://crudcrud.com/api/bb9ccc62956143d6a7f50a755324d5eb/expenseData/${id}`)
+        .then((response)=>{
+            window.location.reload;
+            console.log(response);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+        let li=e.target.parentElement;
+        ul.removeChild(li);
 
+    }
 }
 
 
+function editUser(e){
+    if(e.target.classList.contains('edit')){
+   let id =e.target.parentElement.id;
+   console.log(id);
+   console.log(e.target.parentElement.id.nextElementSibling)
+   axios.get(`https://crudcrud.com/api/bb9ccc62956143d6a7f50a755324d5eb/expenseData/${id}`)
+           .then((response)=>{
+                    expenseAmount.value=response.data.amount;
+                    expenseDescription.value=response.data.description;
+                    expenseChoose.value=response.data.choose;
+            })      
+            axios.delete(`https://crudcrud.com/api/bb9ccc62956143d6a7f50a755324d5eb/expenseData/${id}`) 
+            let li=e.target.parentElement;
+            ul.removeChild(li);    
+    }
+}
 
